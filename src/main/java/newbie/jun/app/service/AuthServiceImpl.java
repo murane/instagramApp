@@ -1,13 +1,16 @@
 package newbie.jun.app.service;
 
+import lombok.extern.slf4j.Slf4j;
 import newbie.jun.app.model.Member;
 import newbie.jun.app.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 @Service
+@Slf4j
 public class AuthServiceImpl implements AuthService{
     @Autowired
     private MemberRepository memberRepository;
@@ -15,19 +18,15 @@ public class AuthServiceImpl implements AuthService{
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public Member SignUp(String email, String password, String name, String nickname) {
-        Member member = Member.builder()
-                .email(email)
-                .nickname(nickname)
-                .password(passwordEncoder.encode(password))
-                .name(name)
-                .build();
+    public Member SignUp(Member member) {
         if(EmailDuplicationCheck(member)){
             throw new RuntimeException();
         }
         if(NicknameDuplicationCheck(member)){
             throw new RuntimeException();
         }
+        String password=member.getPassword();
+        member.setPassword(passwordEncoder.encode(password));
         return memberRepository.save(member);
     }
     private boolean EmailDuplicationCheck(Member member){
@@ -45,9 +44,10 @@ public class AuthServiceImpl implements AuthService{
             throw new RuntimeException("존재하지 않는 이메일입니다");
         }
         else {
-            Member user = member.get();
-            String encodedPassword=passwordEncoder.encode(password);
-            if(!user.getPassword().equals(encodedPassword)) {
+            Member loginMember = member.get();
+            if(!passwordEncoder.matches(password,loginMember.getPassword())) {
+                log.info(loginMember.getPassword());
+                log.info(password);
                 throw new RuntimeException("비밀번호가 틀렸습니다.");
             }
         }

@@ -25,6 +25,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'io.jsonwebtoken:jjwt-api:0.10.7'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	runtime 'io.jsonwebtoken:jjwt-impl:0.10.7'
 	runtime 'io.jsonwebtoken:jjwt-jackson:0.10.7'
 	implementation 'junit:junit:4.12'

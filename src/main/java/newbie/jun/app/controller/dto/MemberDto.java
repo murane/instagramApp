@@ -1,15 +1,17 @@
-package newbie.jun.app.service;
+package newbie.jun.app.controller.dto;
 
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.validation.annotation.Validated;
 
-public class UserDto {
+import javax.validation.Valid;
+
+public class MemberDto {
     @Getter
     @NoArgsConstructor(access = AccessLevel.PUBLIC)
     public static class SignInReq {
+        @Valid
         public String email;
+        @Valid
         public String password;
         @Builder
         public SignInReq(String email,String password){
@@ -19,9 +21,16 @@ public class UserDto {
     }
     @Getter
     public static class SignInRes {
-
+        private final String accessToken;
+        private final String refreshToken;
+        @Builder
+        public SignInRes(String accessToken, String refreshToken){
+            this.accessToken=accessToken;
+            this.refreshToken=refreshToken;
+        }
     }
     @Getter
+    @NoArgsConstructor(access = AccessLevel.PUBLIC)
     public static class SignUpReq{
         public String email;
         public String name;
@@ -39,4 +48,5 @@ public class UserDto {
     public static class SignUpRes{
 
     }
+
 }
