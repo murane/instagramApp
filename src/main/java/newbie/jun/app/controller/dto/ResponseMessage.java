@@ -1,4 +1,4 @@
-package newbie.jun.app.service;
+package newbie.jun.app.controller.dto;
 
 public class ResponseMessage {
     public static final String LOGIN_SUCCESS = "로그인 성공";

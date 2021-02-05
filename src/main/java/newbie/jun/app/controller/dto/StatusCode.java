@@ -1,4 +1,4 @@
-package newbie.jun.app.service;
+package newbie.jun.app.controller.dto;
 
 public class StatusCode {
     public static final int OK = 200;
