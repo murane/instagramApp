@@ -1,5 +1,7 @@
 package newbie.jun.app.controller;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import newbie.jun.app.common.CookieUtil;
 import newbie.jun.app.common.JwtUtil;
 import newbie.jun.app.common.RedisUtil;
@@ -20,17 +22,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
+@AllArgsConstructor
 public class AuthController {
-    @Autowired
+
     private AuthService authService;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
     private JwtUtil jwtUtil;
-    @Autowired
     private CookieUtil cookieUtil;
-    @Autowired
     private RedisUtil redisUtil;
+
     @PostMapping("/signin")
     public Response signin(@RequestBody MemberDto.SignInReq signInReq,
                            HttpServletRequest req, HttpServletResponse res){
@@ -56,13 +55,7 @@ public class AuthController {
     @PostMapping("/signup")
     public Response signup(@RequestBody MemberDto.SignUpReq signUpReq){
         try{
-            Member member=Member.builder()
-                    .email(signUpReq.getEmail())
-                    .name(signUpReq.getName())
-                    .nickname(signUpReq.getNickname())
-                    .password(signUpReq.getPassword())
-                    .build();
-            authService.SignUp(member);
+            authService.SignUp(signUpReq);
             return new Response("success","회원가입 성공",null);
         }catch (Exception e){
             return new Response("fail","회원가입 실패",e.getMessage());

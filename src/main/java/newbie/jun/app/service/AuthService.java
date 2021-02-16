@@ -6,6 +6,6 @@ import newbie.jun.app.model.Member;
 import java.util.Optional;
 
 public interface AuthService {
-    Member SignUp(Member member);
+    Member SignUp(MemberDto.SignUpReq signUpReq);
     Optional<Member> SignIn(String email, String password);
 }

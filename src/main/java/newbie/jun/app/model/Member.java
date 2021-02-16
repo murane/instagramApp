@@ -1,6 +1,7 @@
 package newbie.jun.app.model;
 
 import com.sun.istack.NotNull;
+import io.jsonwebtoken.lang.Assert;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -8,10 +9,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import java.util.Date;
 
-@Setter
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="Member")
 public class Member {
     @Id
@@ -48,6 +48,11 @@ public class Member {
 
     @Builder
     public Member(String email, String name, String nickname, String password){
+        Assert.hasText(email, "email must not be empty");
+        Assert.hasText(name, "name must not be empty");
+        Assert.hasText(nickname, "nickname must not be empty");
+        Assert.hasText(password, "password must not be empty");
+
         this.email=email;
         this.name=name;
         this.nickname=nickname;
