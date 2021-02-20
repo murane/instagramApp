@@ -34,11 +34,15 @@ public class AuthServiceImpl implements AuthService{
     //TODO:2021.02.16. RuntimeException -> 정확한 예외로 구체화 시켜주기
     private void EmailDuplicationCheck(Member member){
         Optional<Member> result = memberRepository.findByEmail(member.getEmail());
-        result.orElseThrow(() ->new RuntimeException("이메일이 중복됩니다."));
+        if(result.isPresent()){
+            throw new RuntimeException("이메일중복");
+        }
     }
     private void NicknameDuplicationCheck(Member member){
         Optional<Member> result = memberRepository.findByNickname(member.getNickname());
-        result.orElseThrow(() ->new RuntimeException("닉네임이 중복됩니다."));
+        if(result.isPresent()){
+            throw new RuntimeException("닉네임중복");
+        }
     }
     @Override
     public Optional<Member> SignIn(String email, String password){

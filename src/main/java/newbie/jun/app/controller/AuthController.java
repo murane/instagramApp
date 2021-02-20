@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/auth")
 @AllArgsConstructor
 public class AuthController {
 
@@ -43,7 +43,7 @@ public class AuthController {
             String refreshJwt=jwtUtil.generateRefreshToken(member);
             Cookie acccessToken=cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME,token);
             Cookie refreshToken=cookieUtil.createCookie(JwtUtil.REFRESH_TOKEN_NAME,refreshJwt);
-            redisUtil.setDataExpire(refreshJwt, member.getName(), JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
+            redisUtil.setDataExpire(refreshJwt, member.getEmail(), JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
             res.addCookie(acccessToken);
             res.addCookie(refreshToken);
             return new Response("success", "로그인 성공", token);

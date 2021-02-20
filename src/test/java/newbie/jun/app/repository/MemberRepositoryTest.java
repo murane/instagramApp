@@ -2,7 +2,7 @@ package newbie.jun.app.repository;
 
 import newbie.jun.app.model.Member;
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,6 +19,7 @@ import java.util.Optional;
 public class MemberRepositoryTest {
     @Autowired
     MemberRepository memberRepository;
+
     @Test
     public void 유저_저장하기(){
         //given

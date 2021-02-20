@@ -1,5 +1,6 @@
 package newbie.jun.app.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
 import io.jsonwebtoken.lang.Assert;
 import lombok.*;
@@ -7,36 +8,36 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name="Member")
-public class Member {
+@Table(name="member")
+public class Member{
     @Id
+    @Column(name="member_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @NotNull
-    @Column(length = 50,name="user_email")
+    @Column(length = 50,name="user_email",nullable = false, unique = true)
     private String email;
 
-    @NotNull
-    @Column(length = 20,name="user_name")
+    @Column(length = 20,name="user_name",nullable = false)
     private String name;
 
-    @NotNull
-    @Column(length = 20,name="user_nickname")
+    @Column(length = 20,name="user_nickname",nullable = false, unique = true)
     private String nickname;
 
-    @NotNull
-    @Column(length = 80,name="user_password")
+    @Column(length = 80,name="user_password",nullable = false)
     private String password;
 
     @Column(name="user_role")
     @Enumerated(EnumType.STRING)
-    private UserRole role = UserRole.ROLE_NOT_PERMITTED;
+    private final UserRole role = UserRole.ROLE_NOT_PERMITTED;
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreationTimestamp
@@ -45,6 +46,21 @@ public class Member {
     @Temporal(TemporalType.TIMESTAMP)
     @UpdateTimestamp
     private Date updateAt;
+
+    //내가 팔로우하는 사람들
+    //@JoinColumn("")
+    @JsonIgnore
+    //팔로워가 '나'인 경우
+    @OneToMany(mappedBy = "follower",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Follow> followings;
+
+    //나를 팔로우하는사람들
+    //@JoinColumn("")
+    @JsonIgnore
+    //팔로이가 '나'인 경우
+    @OneToMany(mappedBy = "followee",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Set<Follow> followers;
+
 
     @Builder
     public Member(String email, String name, String nickname, String password){

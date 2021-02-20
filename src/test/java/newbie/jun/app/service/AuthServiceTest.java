@@ -1,28 +1,45 @@
 package newbie.jun.app.service;
 
+import newbie.jun.app.controller.dto.MemberDto;
 import newbie.jun.app.model.Member;
-import org.junit.jupiter.api.Test;
+import newbie.jun.app.repository.MemberRepository;
+import org.assertj.core.api.Assertions;
+import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.mockito.Mockito.*;
 
 import javax.transaction.Transactional;
 
 @RunWith(SpringRunner.class)
-@Transactional
+@ExtendWith(MockitoExtension.class)
 public class AuthServiceTest {
-    private AuthServiceImpl authService;
+    @InjectMocks
+    private AuthService authService;
+    @Mock
+    private MemberRepository memberRepository;
     @Test
-    void 회원_가입테스트(){
+    public void 회원_가입테스트(){
         //given
-        Member member = Member.builder()
+        when()
+        MemberDto.SignUpReq signUpReq = MemberDto.SignUpReq.builder()
+                .name("junsu")
                 .email("murane@naver.com")
-                .nickname("바보")
-                .name("정준수")
-                .password("12345")
+                .nickname("test")
+                .password("1234")
                 .build();
         //when
-        //authService.SignUp(user);
+        Member RegisteredMember = authService.SignUp(signUpReq);
         //then
-        //Assertions.assertThat()
+        Assertions.assertThat(RegisteredMember.getEmail()).isEqualTo("murane@naver.com");
     }
 }

@@ -5,9 +5,9 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import newbie.jun.app.common.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Value;
 import newbie.jun.app.model.Member;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -16,7 +16,7 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-    public final static long TOKEN_VALIDATION_SECOND = 1000L * 10;
+    public final static long TOKEN_VALIDATION_SECOND = 1000L * 100000;
     public final static long REFRESH_TOKEN_VALIDATION_SECOND = 1000L * 60 * 24 * 2;
 
     final static public String ACCESS_TOKEN_NAME = "accessToken";
@@ -37,8 +37,8 @@ public class JwtUtil {
                 .getBody();
     }
 
-    public String getUsername(String token) {
-        return extractAllClaims(token).get("username", String.class);
+    public String getUseremail(String token) {
+        return extractAllClaims(token).get("useremail", String.class);
     }
 
     public Boolean isTokenExpired(String token) {
@@ -47,17 +47,17 @@ public class JwtUtil {
     }
 
     public String generateToken(Member member) {
-        return doGenerateToken(member.getName(), TOKEN_VALIDATION_SECOND);
+        return doGenerateToken(member.getEmail(), TOKEN_VALIDATION_SECOND);
     }
 
     public String generateRefreshToken(Member member) {
-        return doGenerateToken(member.getName(), REFRESH_TOKEN_VALIDATION_SECOND);
+        return doGenerateToken(member.getEmail(), REFRESH_TOKEN_VALIDATION_SECOND);
     }
 
-    public String doGenerateToken(String username, long expireTime) {
+    public String doGenerateToken(String useremail, long expireTime) {
 
         Claims claims = Jwts.claims();
-        claims.put("username", username);
+        claims.put("useremail", useremail);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -67,9 +67,8 @@ public class JwtUtil {
                 .compact();
     }
 
-    public Boolean validateToken(String token, UserDetails userDetails) {
-        final String username = getUsername(token);
-
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+    public Boolean validateToken(String token, CustomUserDetails userDetails) {
+        final String useremail = getUseremail(token);
+        return (useremail.equals(userDetails.getEmail()) && !isTokenExpired(token));
     }
 }
