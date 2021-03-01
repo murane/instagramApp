@@ -4,6 +4,7 @@ import newbie.jun.app.controller.dto.MemberDto;
 import newbie.jun.app.model.Member;
 import newbie.jun.app.repository.MemberRepository;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.BDDAssertions;
 import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -16,6 +17,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.test.context.TestConstructor;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.assertj.core.api.BDDAssertions.*;
 import static org.mockito.Mockito.*;
 
 import javax.transaction.Transactional;
@@ -30,7 +32,6 @@ public class AuthServiceTest {
     @Test
     public void 회원_가입테스트(){
         //given
-        when()
         MemberDto.SignUpReq signUpReq = MemberDto.SignUpReq.builder()
                 .name("junsu")
                 .email("murane@naver.com")

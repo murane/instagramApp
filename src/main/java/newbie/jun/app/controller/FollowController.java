@@ -51,7 +51,7 @@ public class FollowController {
         }
         return new Response("success","언팔로우 성공",null);
     }
-    @PostMapping("/followings")
+    @PostMapping("/followers")
     public Response getFollowerList(HttpServletRequest req){
         String token = req.getHeader("Authorization");
         String email =  jwtUtil.getUseremail(token);

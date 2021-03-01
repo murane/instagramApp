@@ -69,11 +69,11 @@ public class FollowServiceImpl implements FollowService{
     public Stream<Member> GetFollowers(String FolloweeEmail) {
         Stream<Member> followersStream=Stream.empty();
         try {
-            Member member =memberRepository.findByEmail(FolloweeEmail)
-                    .orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
-            log.info(member.getName());
-            Set<Follow> followings=  member.getFollowings();
-            Set<Follow> test=member.getFollowers();
+            Optional<Member> Mem = memberRepository.findByEmail(FolloweeEmail);
+            Member follower =Mem.orElseThrow(() -> new RuntimeException("존재하지 않는 사용자입니다."));
+            log.info(follower.getName());
+            Set<Follow> followings=  follower.getFollowings();
+            Set<Follow> test=follower.getFollowers();
             log.info(">>"+test.size());
             log.info(">>"+followings.size());
             for(Follow each : followings){

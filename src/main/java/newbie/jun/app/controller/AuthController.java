@@ -34,23 +34,11 @@ public class AuthController {
     public Response signin(@RequestBody MemberDto.SignInReq signInReq,
                            HttpServletRequest req, HttpServletResponse res){
         try{
-            String email=signInReq.getEmail();
-            String password=signInReq.getPassword();
-            Member member=authService.SignIn(email,password).orElseThrow(
-                    ()->new RuntimeException("로그인 실패")
-            );
-            String token=jwtUtil.generateToken(member);
-            String refreshJwt=jwtUtil.generateRefreshToken(member);
-            Cookie acccessToken=cookieUtil.createCookie(JwtUtil.ACCESS_TOKEN_NAME,token);
-            Cookie refreshToken=cookieUtil.createCookie(JwtUtil.REFRESH_TOKEN_NAME,refreshJwt);
-            redisUtil.setDataExpire(refreshJwt, member.getEmail(), JwtUtil.REFRESH_TOKEN_VALIDATION_SECOND);
-            res.addCookie(acccessToken);
-            res.addCookie(refreshToken);
+            String token=authService.SignIn(signInReq);
             return new Response("success", "로그인 성공", token);
         }catch (Exception e){
-            return new Response("error","로그인 실패",e.getMessage());
+            return new Response("fail","로그인 실패",e.getMessage());
         }
-
     }
     @PostMapping("/signup")
     public Response signup(@RequestBody MemberDto.SignUpReq signUpReq){
