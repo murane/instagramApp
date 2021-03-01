@@ -4,8 +4,10 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import newbie.jun.app.model.Member;
+import newbie.jun.app.model.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -22,16 +24,12 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(Member member){
         this.member=member;
     }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> collect = new ArrayList<>();
-        collect.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return member.getRole().toString();
-            }
-        });
-        return collect;
+        ArrayList<GrantedAuthority> auth = new ArrayList<GrantedAuthority>();
+        auth.add(new SimpleGrantedAuthority(UserRole.ROLE_USER.toString()));
+        return auth;
     }
 
     @Override
@@ -42,7 +40,9 @@ public class CustomUserDetails implements UserDetails {
     public String getEmail(){
         return member.getEmail();
     }
-
+    public Member getMember(){
+        return member;
+    }
     @Override
     public String getUsername() {
         return member.getName();

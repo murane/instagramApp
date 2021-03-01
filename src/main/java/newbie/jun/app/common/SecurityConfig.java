@@ -38,16 +38,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         source.registerCorsConfiguration("/**",configuration);
         return source;
     }
-//    @Bean
-//    public SecurityAuthenticationFilter securityAuthenticationFilter(){
-//        return new SecurityAuthenticationFilter();
-//    }
+    @Bean
+    public SecurityAuthenticationFilter securityAuthenticationFilter(){
+        return new SecurityAuthenticationFilter();
+    }
+    private static final String[] PUBLIC_URI = {
+            "/api/auth/*"
+    };
+
     @Override
     protected void configure(HttpSecurity http) throws Exception{
         http
                 .cors()
-                .and()
-                .csrf().disable()
+                    .and()
+                .csrf()
+                    .disable()
                 .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
@@ -55,12 +60,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .authenticationEntryPoint(authenticationEntryPoint)
                     .and()
                 .authorizeRequests()
-                    .anyRequest().permitAll()
-                .and()
-                .formLogin().disable();
-//        http
-//                .addFilterBefore(securityAuthenticationFilter(),
-//                        UsernamePasswordAuthenticationFilter.class);
+                    .antMatchers(PUBLIC_URI)
+                        .permitAll()
+                    .anyRequest()
+                        .authenticated()
+                    .and()
+                .formLogin()
+                    .disable();
+        http
+                .addFilterBefore(securityAuthenticationFilter(),
+                        UsernamePasswordAuthenticationFilter.class);
     }
     @Bean
     public PasswordEncoder passwordEncoder(){
