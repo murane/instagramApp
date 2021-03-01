@@ -9,5 +9,5 @@ import java.util.Optional;
 @Service
 public interface AuthService {
     Member SignUp(MemberDto.SignUpReq signUpReq);
-    Optional<Member> SignIn(String email, String password);
+    String SignIn(MemberDto.SignInReq signInReq) throws Exception;
 }
